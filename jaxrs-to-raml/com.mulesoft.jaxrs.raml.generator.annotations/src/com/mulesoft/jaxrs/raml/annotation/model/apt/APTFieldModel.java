@@ -60,8 +60,13 @@ public class APTFieldModel extends APTModel implements IFieldModel{
 			return false;
 		return true;
 	}
-
-
-	
+	@Override
+	public boolean isStatic() {
+		return false;
+	}
+	@Override
+	public boolean isPublic() {
+		return false;
+	}
 
 }

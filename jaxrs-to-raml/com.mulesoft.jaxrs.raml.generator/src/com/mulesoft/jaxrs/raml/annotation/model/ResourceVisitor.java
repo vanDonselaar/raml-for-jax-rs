@@ -44,6 +44,10 @@ import org.raml.model.parameter.Header;
 import org.raml.model.parameter.QueryParameter;
 import org.raml.model.parameter.UriParameter;
 
+import com.mulesoft.jaxrs.raml.jaxb.ExampleGenerator;
+import com.mulesoft.jaxrs.raml.jaxb.JAXBRegistry;
+import com.mulesoft.jaxrs.raml.jaxb.JAXBType;
+import com.mulesoft.jaxrs.raml.jaxb.XMLWriter;
 import com.mulesoft.jaxrs.raml.jsonschema.JsonFormatter;
 import com.mulesoft.jaxrs.raml.jsonschema.JsonUtil;
 import com.mulesoft.jaxrs.raml.jsonschema.SchemaGenerator;
@@ -73,6 +77,8 @@ public abstract class ResourceVisitor {
 	private static final String JSON = "json"; //$NON-NLS-1$
 
 	private static final String XML = "xml"; //$NON-NLS-1$
+	
+	protected JAXBRegistry regsistry=new JAXBRegistry();
 
 	public class CustomSchemaOutputResolver extends SchemaOutputResolver {
 
@@ -168,7 +174,21 @@ public abstract class ResourceVisitor {
 
 	}
 
-	protected abstract void generateXMLSchema(ITypeModel t);
+	protected void generateXMLSchema(ITypeModel t){
+			
+	}
+	
+	protected String generateXMLExampleJAXB(ITypeModel t){
+		JAXBRegistry rs=new JAXBRegistry();
+		JAXBType jaxbModel = rs.getJAXBModel(t);
+		if (jaxbModel!=null){
+			XMLWriter writer = new XMLWriter();
+			ExampleGenerator gen=new ExampleGenerator(writer);
+			gen.generateXML(jaxbModel);
+			return writer.toString();
+		}
+		return null;
+	}
 
 	class StringHolder {
 		String content;
@@ -612,7 +632,7 @@ public abstract class ResourceVisitor {
 		}
 	}
 
-	private void writeString(String generateDummyXmlFor, File toSave) {
+	protected void writeString(String generateDummyXmlFor, File toSave) {
 		try {
 			FileOutputStream fileOutputStream = new FileOutputStream(toSave);
 			fileOutputStream.write(generateDummyXmlFor.getBytes("UTF-8")); //$NON-NLS-1$
@@ -623,7 +643,7 @@ public abstract class ResourceVisitor {
 	}
 
 	protected void generateExamle(File schemaFile, String content) {
-		if (schemaFile != null) {
+		/*if (schemaFile != null) {
 			File examplesDir = schemaFile.getParentFile();
 			if (examplesDir != null
 					&& examplesDir.getName().endsWith(SCHEMAS_FOLDER)) {
@@ -661,8 +681,7 @@ public abstract class ResourceVisitor {
 					}
 				}
 			}
-		}
-		
+		}*/
 		/*String dummyXml = new XSDUtil().instantiateToString(schemaFile.getAbsolutePath(),null);
 		doGenerateAndSave(schemaFile, examplesDir.getParentFile(), examplesDir, dummyXml);*/
 		return;

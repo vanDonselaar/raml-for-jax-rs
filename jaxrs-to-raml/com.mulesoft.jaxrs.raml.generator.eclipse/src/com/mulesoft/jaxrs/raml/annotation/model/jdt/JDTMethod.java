@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 
+import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.ILocalVariable;
+import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
@@ -183,5 +185,36 @@ public class JDTMethod extends JDTAnnotatable implements IMethodModel {
 			throw new IllegalStateException(e);
 		}
 		return null;
+	}
+	@Override
+	public boolean isStatic() {
+		try {
+			return Flags.isStatic(((IMember)tm).getFlags());
+		} catch (JavaModelException e) {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isPublic() {
+		try {
+			return Flags.isPublic(((IMember)tm).getFlags());
+		} catch (JavaModelException e) {
+			return false;
+		}
+	}
+
+	@Override
+	public ITypeModel getType() {
+		return getReturnedType();
+	}
+
+	@Override
+	public ITypeModel getJAXBType() {
+		try {
+			return doGetJAXBType(((IMember)tm), ((IMethod)tm).getReturnType());
+		} catch (JavaModelException e) {
+			return null;
+		}
 	}
 }

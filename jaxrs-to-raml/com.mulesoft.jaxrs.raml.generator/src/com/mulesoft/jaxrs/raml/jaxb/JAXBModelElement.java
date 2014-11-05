@@ -16,9 +16,15 @@ public class JAXBModelElement {
 	protected String namespace;
 	protected String typeName;
 	protected String elementName;
+	final JAXBRegistry registry;
 
-	public JAXBModelElement(IBasicModel model) {
+	public JAXBModelElement(IBasicModel model,JAXBRegistry registry) {
 		super();
+		this.registry=registry;
+		if (model==null){
+			throw new IllegalArgumentException();
+		}
+		this.originalType=model;
 		elementName=value(XmlElement.class, NAME);
 		namespace=value(XmlElement.class, NAMESPACE);
 		typeName=value(XmlType.class,NAME);
