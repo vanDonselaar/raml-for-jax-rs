@@ -28,6 +28,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.jsonschema2pojo.AnnotationStyle;
 import org.raml.jaxrs.codegen.core.Configuration.JaxrsVersion;
+import org.raml.jaxrs.codegen.core.ext.BodyParamNotNullAnnotationGenerator;
 
 /**
  * <p>Launcher class.</p>
@@ -162,6 +163,7 @@ public class Launcher {
         configuration.setUseJsr303Annotations(useJsr303Annotations);
         configuration.setJsonMapper(AnnotationStyle.valueOf(jsonMapper.toUpperCase()));
         configuration.setSourceDirectory(sourceDirectory);
+		configuration.getExtensions().add(new BodyParamNotNullAnnotationGenerator());
         
         return configuration;
 	}
